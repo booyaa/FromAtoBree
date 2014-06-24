@@ -25,45 +25,49 @@ var Locs = {
   }, z : "Ered Luin", r : 1, l : "21.6s,94.1w" }
 };
 
-console.dir(Locs);
+var traverse = require('traverse');
+var paths = traverse.paths(Locs);
 
-var start = "Thorin's Gate";
-var finish = "Thrasi's Lodge";
-var route = [];
-var time;
-var cost;
-var via;
-
-// searching for location
-// for (var key in Locs) {
-//   console.log(key);
-//   if (start === key) {
-//     console.log("found starting stable: " + key);
-//   } else {
-//     console.log("unknown stable: " + start);
-//   }
-// }
-
-// finding destination for a given starting point
-// var foundDestination = false;
-// for (var key in Locs[start].d) {
-//   if (finish === key) {
-//     foundDestination = true;
+console.dir(paths);
+// console.dir(Locs);
+// 
+// var start = "Thorin's Gate";
+// var finish = "Thrasi's Lodge";
+// var route = [];
+// var time;
+// var cost;
+// var via;
+// 
+// // searching for location
+// // for (var key in Locs) {
+// //   console.log(key);
+// //   if (start === key) {
+// //     console.log("found starting stable: " + key);
+// //   } else {
+// //     console.log("unknown stable: " + start);
+// //   }
+// // }
+// 
+// // finding destination for a given starting point
+// // var foundDestination = false;
+// // for (var key in Locs[start].d) {
+// //   if (finish === key) {
+// //     foundDestination = true;
+// //   }
+// // }
+// // 
+// // if (foundDestination) { 
+// //   console.log("Found destination! " + finish);
+// // } else {
+// //   console.log("Failed to find viable route to " + finish);
+// // }
+// //
+// for (var destination in Locs) { // destinations
+//   console.log("%s connections", destination);
+//   if (Locs[destination].hasOwnProperty("d")) {
+//     for (var connection in Locs[destination]["d"]) {
+//       console.log("\t%s", connection);
+//     }
 //   }
 // }
 // 
-// if (foundDestination) { 
-//   console.log("Found destination! " + finish);
-// } else {
-//   console.log("Failed to find viable route to " + finish);
-// }
-//
-for (var destination in Locs) { // destinations
-  console.log("%s connections", destination);
-  if (Locs[destination].hasOwnProperty("d")) {
-    for (var connection in Locs[destination]["d"]) {
-      console.log("\t%s", connection);
-    }
-  }
-}
-
