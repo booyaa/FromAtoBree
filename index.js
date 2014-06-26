@@ -2,6 +2,7 @@
 
 var dijkstra = require('dijkstrajs') // we have a winner
   , find_path = dijkstra.find_path;
+var options = { level : 69, swiftTravel : true };
 
 function CreateGraph() {
   //--------------- stable parser -----------------
@@ -30,11 +31,14 @@ function CreateGraph() {
       var stCost = typeof(stables[loc].d[dest].st) !== "undefined" ? 1 : 5;
 
       // level costing (parameter)
-      var level = 69;
+      var level = options.level;
+      
 
       var minLevel = 0;
       if (typeof(stables[loc].d[dest].l) !== "undefined") {
         minLevel = stables[loc].d[dest].l;
+        console.log("dest %s\n\tl %d + ml %d = %d", dest, level, minLevel, (level + minLevel));        
+        console.log("\tl < ml %s st %d string %s", (level < minLevel), stCost, minLevel.toString());
       }
 
       var levelCost = level < minLevel ? 5 : 0; // 1
@@ -85,19 +89,62 @@ function GetPathCost(path) {
 }
 
 
-var graph = CreateGraph()
+function GetPlace(place) {
+  var regex = new RegExp("^"+place,"i");
+
+  var found = [];
+  Object.keys(graph).forEach(function(name) {
+    if (regex.test(name)) {
+      found.push(name);
+      // console.log('found! ' + name);
+    }
+    // console.log(name);
+  });
+
+  return found;
+}
+
+
+var graph = CreateGraph();
+var path = require('path');
 // var path = find_path(graph, "Thorin's Gate", "Rivendell");
-var path = find_path(graph, "Thorin's Gate", "Durin's Threshold");
-// var path = find_path(graph, "Thorin's Gate", "Mekhem-bizru");
-console.log("your route: ", path);
 
-console.log('--------');
-console.dir(GetPathCost(path));
+console.log("args: %d", process.argv.length);
 
-var place = /Ost/;
-Object.keys(graph).forEach(function(name) {
-  if (place.test(name)) {
-    console.log('found! ' + name);
-  }
-  // console.log(name);
-});  
+if (process.argv.length < 3) {
+  console.log("usage:");
+  console.log("%s <place> - lookup place", path.basename(process.argv[1]));
+  console.log("%s <start> <finish> - plan route", path.basename(process.argv[1]));
+  return;
+}
+
+var startArg = process.argv[2];
+var finishArg = process.argv[3];
+
+console.log("args start %s finish %s", startArg, finishArg);
+
+var start = GetPlace(startArg)[0]; // get first
+var finish = GetPlace(finishArg)[0]; // get first
+
+if (typeof(finishArg) === "undefined") {
+  console.log("Matches for %s %s", startArg, JSON.stringify(GetPlace(startArg)))
+  return;
+}
+console.log("GetPlace start %s finish %s", start, finish);
+
+if (typeof start !== "undefined" && typeof finish !== "undefined") {
+  var path = find_path(graph, start, finish);
+  // var path = find_path(graph, "Thorin's Gate", "Mekhem-bizru");
+  console.log("your route: ", path);
+
+  console.log('--------');
+  console.dir(GetPathCost(path));
+} else {
+  console.log("No matches for either start (%s) or finish (%s) locations", startArg, finishArg);
+}
+// if (found.length > 0) {
+//   console.dir(found);
+// } else {
+//   console.log("No match found for: %s", place);
+// }
+// 
