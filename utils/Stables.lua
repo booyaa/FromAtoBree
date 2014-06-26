@@ -5,6 +5,7 @@
 --				t=milestone time, ml=minimum level (milestone)
 -- Dest. keys: c=cost, s=ST cost, l=min level(+ if ST only), r=requires, t=time, st=ST time
 
+-- source: http://regex.info/code/JSON.lua
 JSON = (loadfile "JSON.lua")()
 --
 local Locs = {
