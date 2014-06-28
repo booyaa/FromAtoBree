@@ -1,0 +1,43 @@
+{
+  "name": "fromatobree",
+  "version": "1.0.0",
+  "description": "From A to Bree - a middle earth journey planner for Lord of the Rings Online",
+  "main": "lib/fromatobree.js",
+  "bin": {
+    "fromatobree": "bin/index.js"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "dijkstrajs": "^1.0.0"
+  },
+  "devDependencies": {
+    "tape": "^2.13.3"
+  },
+  "scripts": {
+    "test": "tape --tap tests/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/booyaa/FromAtoBree.git"
+  },
+  "keywords": [
+    "lotro",
+    "stables",
+    "journey",
+    "route",
+    "planner",
+    "travel"
+  ],
+  "author": {
+    "name": "booyaa",
+    "email": "booyaabooyaabooyaa@gmail.com",
+    "url": "http://booyaa.org"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/booyaa/FromAtoBree/issues"
+  },
+  "homepage": "https://github.com/booyaa/FromAtoBree"
+}
