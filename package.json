@@ -15,6 +15,14 @@
   "devDependencies": {
     "tape": "^2.13.3"
   },
+  "testling": {
+    "files": "tests/*.js",
+    "browsers": [
+      "chrome/22..latest",
+      "firefox/16..latest",
+      "safari/latest"
+    ]
+  },
   "scripts": {
     "test": "tape --tap tests/*.js"
   },
