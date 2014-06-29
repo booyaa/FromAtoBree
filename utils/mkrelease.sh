@@ -1,6 +1,6 @@
 VERSION=$1
 node utils/build.js
-rm ~/stage/FromAtoBree-$VERSION.zip
-zip -j ~/stage/FromAtoBree.zip dontcommitmebro/fromatobree-browser*.js
+rm ~/stage/fromatobree-web-v*.zip
+zip -j ~/stage/fromatobree-web-$VERSION.zip dontcommitmebro/fromatobree-browser*.js
 npm pack
 mv fromatobree*.tgz ~/stage/
