@@ -58,3 +58,9 @@ test("Get total time for route", function(t) {
   t.end();
 });
 
+test("Get list of places in the shire", function(t) {
+  var placesByRegion = fatb.GetPlacesByRegion("the Shire");
+  t.deepEquals(placesByRegion, ["Brockenborings", "Hobbiton", "Michel Delving", "Needlehole", "Shire Homesteads", "Stock"]);
+  t.end();
+});
+

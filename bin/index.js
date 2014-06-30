@@ -13,6 +13,28 @@ if (process.argv.length < 3) {
 var startArg = process.argv[2];
 var finishArg = process.argv[3];
 
+//FIXME: use a better args parser!
+if (startArg === "region") {
+  console.log("Regions in the %s:\n", finishArg, fatb.GetPlacesByRegion(finishArg));
+  return;
+}
+
+if (startArg === "listregions") {
+  var regions = [];
+  console.log("list regions");
+  for (var place in fatb.STABLES) {
+    var area = fatb.STABLES[place].z;
+
+    if (regions.indexOf(area) === -1) {
+      regions.push(area);
+    }
+  }
+
+  console.log("%j", regions.sort());
+  return; 
+}
+
+
 var start = fatb.GetPlace(startArg)[0]; // get first
 var finish = fatb.GetPlace(finishArg)[0]; // get first
 
