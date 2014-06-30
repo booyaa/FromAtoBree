@@ -9,5 +9,42 @@
       <option value="United Kingdom">
       <option valye="Zambia">
       </datalist>
+
+    <select id="foo">
+      <option value="value1">value one</option>
+      <option value="value2">value two</option>
+      <option value="value3">value three</option>
+    </select>
+
+    <select id="bar">
+      <option value="unset">select a value from foo first!</option>
+    </select>
+
+    <script>
+      var el = document.getElementById("foo");
+      var em;
+      el.addEventListener("change", function(evt) { 
+      console.dir(evt); 
+        em = evt;
+        var selection = em.srcElement.value; 
+        console.log("you selected %s", selection);
+
+        if (selection === "value3") {
+        console.log("adding...");
+          var el2 = document.getElementById("bar");
+          var opt1 = document.createElement("option");
+          var opt2 = document.createElement("option");
+          opt1.value = "value3.1";
+          opt1.text = "value three dot one";
+          opt2.value = "value3.2";
+          opt2.text = "value three dot two";
+          el2.remove(0);
+          el2.add(opt1, null);
+          el2.add(opt2, null);
+        }
+        
+      });
+      console.dir(el);
+    </script>
 </body>
 </html>
