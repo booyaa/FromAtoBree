@@ -64,3 +64,10 @@ test("Get list of places in the shire", function(t) {
   t.end();
 });
 
+test("Get a list of regions", function(t) {
+  var regions = fatb.GetRegions();
+
+  t.deepEquals(regions, ["Angmar","Bree-land","Dunland","East Rohan","Enedwaith","Ered Luin","Eregion","Ettenmoors","Evendim","Forochel","Gap of Rohan","Great River","Lone-lands","Lothlorien","Mirkwood","Misty Mountains","Moria","Nan Curunir","North Downs","Trollshaws","West Rohan","Wildermore","the Shire"]);
+  t.end();
+});
+

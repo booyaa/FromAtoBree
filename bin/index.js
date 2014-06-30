@@ -20,17 +20,9 @@ if (startArg === "region") {
 }
 
 if (startArg === "listregions") {
-  var regions = [];
   console.log("list regions");
-  for (var place in fatb.STABLES) {
-    var area = fatb.STABLES[place].z;
 
-    if (regions.indexOf(area) === -1) {
-      regions.push(area);
-    }
-  }
-
-  console.log("%j", regions.sort());
+  console.log("%j", fatb.GetRegions());
   return; 
 }
 
