@@ -1,50 +1,106 @@
 <html>
   <head>
-    <script src="../lib/fromatobree-browser.js"></script>
+    <script src="dontcommitmebro/fromatobree-browser.js"></script>
+    <script>
+      var regions = fatb.GetRegions();
+    </script>
   <body>
-    <h1>doesn't work on safari :(</h1>
-    <label for="country_name">Country: </label><input id="country_name type="text" list="country" />
-    <datalist id="country">
-      <option value="Albania">
-      <option value="United Kingdom">
-      <option valye="Zambia">
-      </datalist>
+    <!-- <h1>doesn't work on safari :(</h1> -->
+    <!-- <label for="country_name">Country: </label><input id="country_name type="text" list="country" /> -->
+    <!-- <datalist id="country"> -->
+    <!--   <option value="Albania"> -->
+    <!--   <option value="United Kingdom"> -->
+    <!--   <option valye="Zambia"> -->
+    <!--   </datalist> -->
 
-    <select id="foo">
-      <option value="value1">value one</option>
-      <option value="value2">value two</option>
-      <option value="value3">value three</option>
-    </select>
+    <table>
+    <tr><td>
+    <select id="region">
+      <!-- <option value="value1">value one</option> -->
+      <!-- <option value="value2">value two</option> -->
+      <!-- <option value="value3">value three</option> -->
+    </select></td></tr>
 
-    <select id="bar">
+    <tr><td>
+    <select id="place">
       <option value="unset">select a value from foo first!</option>
     </select>
-
+    </td></tr>
+    </table>
     <script>
-      var el = document.getElementById("foo");
-      var em;
-      el.addEventListener("change", function(evt) { 
-      console.dir(evt); 
-        em = evt;
-        var selection = em.srcElement.value; 
-        console.log("you selected %s", selection);
+      var selRegion = document.getElementById("region");
 
-        if (selection === "value3") {
-        console.log("adding...");
-          var el2 = document.getElementById("bar");
-          var opt1 = document.createElement("option");
-          var opt2 = document.createElement("option");
-          opt1.value = "value3.1";
-          opt1.text = "value three dot one";
-          opt2.value = "value3.2";
-          opt2.text = "value three dot two";
-          el2.remove(0);
-          el2.add(opt1, null);
-          el2.add(opt2, null);
-        }
+      for(var i=0; i<regions.length; i++) {
+        selRegion.options[selRegion.options.length] = new Option(regions[i], regions[i]);
+        <!-- console.log("%d=%s", i, regions[i]); -->
+      }
+
+      var region = regions[0]; // angmar
+      var places = fatb.GetPlacesByRegion(region);
+      console.log(places);
+
+      var selPlace = document.getElementById("place");
+
+      for(var i=selPlace.options.length; i >= 0; i--) {
+        selPlace.remove(i);
+      }
+
+      for(var i=0; i<places.length; i++) {
+        selPlace.options[selPlace.options.length] = new Option(places[i], places[i]);
+        console.log("%d=%s", i, places[i]);    
+      }
+
+
+      // events
+      selRegion.addEventListener("change", function(evt) {
+        var region = evt.srcElement.value;
+        console.log("you selected %s", region);
+        var places = fatb.GetPlacesByRegion(region);
+        console.log(places);
         
+        var selPlace = document.getElementById("place");
+        <!--selPlace.remove(0);-->
+
+        for(var i=selPlace.options.length; i >= 0; i--) {
+          selPlace.remove(i);
+        }
+
+        for(var i=0; i<places.length; i++) {
+          selPlace.options[selPlace.options.length] = new Option(places[i], places[i]);
+          console.log("%d=%s", i, places[i]);    
+        }
+
+      }); 
+
+
+      var selPlace = document.getElementById("place");
+      selPlace.addEventListener("change", function(evt) {
+        console.log("you selected %s", evt.srcElement.value);
       });
-      console.dir(el);
+
+      var em;
+      <!-- el.addEventListener("change", function(evt) {  -->
+      <!-- console.dir(evt);  -->
+      <!--   em = evt; -->
+      <!--   var selection = em.srcElement.value;  -->
+      <!--   console.log("you selected %s", selection); -->
+
+      <!--   if (selection === "value3") { -->
+      <!--   console.log("adding..."); -->
+      <!--     var el2 = document.getElementById("bar"); -->
+      <!--     var opt1 = document.createElement("option"); -->
+      <!--     var opt2 = document.createElement("option"); -->
+      <!--     opt1.value = "value3.1"; -->
+      <!--     opt1.text = "value three dot one"; -->
+      <!--     opt2.value = "value3.2"; -->
+      <!--     opt2.text = "value three dot two"; -->
+      <!--     el2.remove(0); -->
+      <!--     el2.add(opt1, null); -->
+      <!--     el2.add(opt2, null); -->
+      <!--   } -->
+      <!-- }); -->
+      <!-- console.dir(el); -->
+
     </script>
 </body>
 </html>
