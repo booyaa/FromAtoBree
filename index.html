@@ -1,33 +1,37 @@
 <html>
   <head>
+    <title>From A to Bree - LotRO middle earth journey planner</title>
+    <link rel="stylesheet" text="text/css" href="css/topcoat-desktop-light.min.css">
+    <link rel="stylesheet" text="text/css" href="css/style.css">
     <script src="js/fromatobree-browser.js"></script>
-    <script>
-      var regions = fatb.GetRegions();
-    </script>
+  </head>
   <body>
     <table border="0">
+      <tr><td colspan="2">Configuration</td></tr>
+      <tr><td colspan="2"><input type="range"  min="1" max="9" step="1" id="level"></td></tr>
       <tr>
         <td>Start</td>
         <td>Finish</td>
       </tr>
       <tr>
         <!-- is autofocus buggy? goes to location after startRegion -->
-        <td><select id="startRegion" tabindex="0" autofocus></select></td>
-        <td><select id="finishRegion" tabindex="2"></select></td>
+        <td><select id="startRegion" tabindex="0" autofocus class="topcoat-button--large"></select></td>
+        <td><select id="finishRegion" tabindex="2" class="topcoat-button--large"></select></td>
       </tr>
       <tr>
-        <td><select id="startPlace" tabindex="1"></select></td>
-        <td><select id="finishPlace" tabindex="3"></select></td>
+        <td><select id="startPlace" tabindex="1" class="topcoat-button--large"></select></td>
+        <td><select id="finishPlace" tabindex="3" class="topcoat-button--large"></select></td>
       </tr>
       <tr>
-        <td colspan="2"><button id="FindRoute">Find Route</button></td>
+        <td colspan="2"><button id="FindRoute" class="topcoat-button--large">Find Route</button></td>
       </tr>
       <tr>
-        <td colspan="2"><textarea id="results" rows="20" cols="90">choose your starting and ending locations!</textarea></td>
+        <td colspan="2"><textarea id="results" rows="20" cols="90" class="topcat-textarea--large">choose your starting and ending locations!</textarea></td>
     </table>
 
     <script>
       // initialisation
+      var regions = fatb.GetRegions();
       var selStartRegion = document.getElementById("startRegion");
       var selFinishRegion = document.getElementById("finishRegion");
       var start, finish = "";
@@ -72,6 +76,11 @@
         }
       };
 
+      var inputLevel = document.getElementById("level");
+      inputLevel.addEventListener("change", function(evt) {
+        // update span text for visual feedback
+        console.log("level: %d", evt.srcElement.value);
+      });
       selStartRegion.addEventListener("change", onChangeRegion); 
       selFinishRegion.addEventListener("change", onChangeRegion); 
       var button = document.getElementById("FindRoute");

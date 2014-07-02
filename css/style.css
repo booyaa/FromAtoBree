@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "Source Code";
+  src: url("../font/SourceCodePro-Regular.otf");
+}
+
+.topcoat-textarea--large {
+  font: 14px "Source Code", courier, monospace;
+}
+
+body {
+   padding-left: 25px; 
+}
