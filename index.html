@@ -5,7 +5,7 @@
       var regions = fatb.GetRegions();
     </script>
   <body>
-    <table>
+    <table border="0">
       <tr>
         <td>Start</td>
         <td>Finish</td>
@@ -19,12 +19,19 @@
         <td><select id="startPlace" tabindex="1"></select></td>
         <td><select id="finishPlace" tabindex="3"></select></td>
       </tr>
+      <tr>
+        <td colspan="2"><button id="FindRoute">Find Route</button></td>
+      </tr>
+      <tr>
+        <td colspan="2"><textarea id="results" rows="20" cols="90">choose your starting and ending locations!</textarea></td>
     </table>
 
     <script>
       // initialisation
       var selStartRegion = document.getElementById("startRegion");
       var selFinishRegion = document.getElementById("finishRegion");
+      var start, finish = "";
+      var route = [], routeCost = {};
 
       for(var i=0; i<regions.length; i++) {
         selStartRegion.options[selStartRegion.options.length] = new Option(regions[i], regions[i]);
@@ -48,7 +55,6 @@
         selFinishPlace.options[selFinishPlace.options.length] = new Option(places[i], places[i]);
       }
 
-
       // events
       function onChangeRegion(evt) {
         var region = evt.srcElement.value;
@@ -68,14 +74,27 @@
 
       selStartRegion.addEventListener("change", onChangeRegion); 
       selFinishRegion.addEventListener("change", onChangeRegion); 
+      var button = document.getElementById("FindRoute");
+      button.addEventListener("click", function(evt) {
+        // console.log(fatb.FindPath(start,finish));
+        route = fatb.FindPath(start,finish);
+        routeCost = fatb.GetPathCostObject(route);
+        console.log(routeCost);
+        var message = "Your path: ";
+        message += JSON.stringify(routeCost, null, 8);
+        document.getElementById("results").value = message;
+      });
 
       var selStartPlace = document.getElementById("startPlace");
       selStartPlace.addEventListener("change", function(evt) {
         console.log("you selected your start as %s", evt.srcElement.value);
+        start = evt.srcElement.value;
+
       });
       var selFinishPlace = document.getElementById("finishPlace");
       selFinishPlace.addEventListener("change", function(evt) {
         console.log("you selected your finish as %s", evt.srcElement.value);
+        finish = evt.srcElement.value;
       });
     </script>
 </body>
