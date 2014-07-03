@@ -36,12 +36,12 @@ test("Get route for Thorin's Gate to First Hall", function(t) {
 var pathCost = fatb.GetPathCostObject(route);
 test("Get cost for route", function(t) {
   t.deepEquals(pathCost, 
-  { "start" : "Thorin's Gate"
-    ,'via South Bree': { mt: 75, s: 1, st: 18 }
-    ,'via West Bree': { S0: true, s: 1, st: 28 }
-    ,'via Galtrev': { l: 65, s: 45, st: 22 }
-    , 'via Twenty-first Hall': { l: -65, s: 45, st: 20 }
-    ,"via First Hall" : { c: 35, l: -45, s: 45, st: 46, t: 345 }
+  { "Thorin's Gate" : {}
+    ,'South Bree': { mt: 75, s: 1, st: 18 }
+    ,'West Bree': { S0: true, s: 1, st: 28 }
+    ,'Galtrev': { l: 65, s: 45, st: 22 }
+    ,'Twenty-first Hall': { l: -65, s: 45, st: 20 }
+    ,"First Hall" : { c: 35, l: -45, s: 45, st: 46, t: 345 }
   }); 
   t.end();
 });
@@ -68,6 +68,13 @@ test("Get a list of regions", function(t) {
   var regions = fatb.GetRegions();
 
   t.deepEquals(regions, ["Angmar","Bree-land","Dunland","East Rohan","Enedwaith","Ered Luin","Eregion","Ettenmoors","Evendim","Forochel","Gap of Rohan","Great River","Lone-lands","Lothlorien","Mirkwood","Misty Mountains","Moria","Nan Curunir","North Downs","Trollshaws","West Rohan","Wildermore","the Shire"]);
+  t.end();
+});
+
+test("Get meta data about place", function(t) {
+  var place = fatb.FATB["Twenty-first Hall"];
+  var metadata = fatb.GetMetaData("Twenty-first Hall");
+  t.deepEquals(metadata, { swiftTravel : true, level: 50 });
   t.end();
 });
 
