@@ -4,6 +4,9 @@
     <link rel="stylesheet" text="text/css" href="css/topcoat-desktop-light.min.css">
     <link rel="stylesheet" text="text/css" href="css/style.css">
     <script src="js/fromatobree-browser.js"></script>
+    <!-- Make sure to remove this in production -->
+    <!-- include it above the </body> tag -->
+  <script src="dev/node-live-reload.js"></script>
   </head>
   <body>
     <table border="0">
@@ -26,7 +29,7 @@
         <td colspan="2"><button id="FindRoute" class="topcoat-button--large">Find Route</button></td>
       </tr>
       <tr>
-        <td colspan="2"><textarea id="results" rows="20" cols="90" class="topcat-textarea--large">choose your starting and ending locations!</textarea></td>
+        <td colspan="2"><textarea id="results" rows="20" cols="90" class="topcat-textarea--large">choose your starting and ending locations! test.</textarea></td>
     </table>
 
     <script>
@@ -34,9 +37,8 @@
       var regions = fatb.GetRegions();
       var selStartRegion = document.getElementById("startRegion");
       var selFinishRegion = document.getElementById("finishRegion");
-      var start, finish = "";
-      var route = [], routeCost = {};
 
+      // populate region select
       for(var i=0; i<regions.length; i++) {
         selStartRegion.options[selStartRegion.options.length] = new Option(regions[i], regions[i]);
         selFinishRegion.options[selFinishRegion.options.length] = new Option(regions[i], regions[i]);
@@ -54,10 +56,16 @@
         selFinishPlace.remove(i);
       }
 
+      // populate place select
       for(var i=0; i<places.length; i++) {
         selStartPlace.options[selStartPlace.options.length] = new Option(places[i], places[i]);
         selFinishPlace.options[selFinishPlace.options.length] = new Option(places[i], places[i]);
       }
+
+      
+      var start = places[0];
+      var finish = places[0];
+      var route = [], routeCost = {};
 
       // events
       function onChangeRegion(evt) {
@@ -72,7 +80,12 @@
 
         for(var i=0; i<places.length; i++) {
           selPlace.options[selPlace.options.length] = new Option(places[i], places[i]);
-          //console.log("%d=%s", i, places[i]);    
+        }
+
+        if (source === "start") {
+          start = places[0];
+        } else {
+          finish = places[0];
         }
       };
 
@@ -85,12 +98,26 @@
       selFinishRegion.addEventListener("change", onChangeRegion); 
       var button = document.getElementById("FindRoute");
       button.addEventListener("click", function(evt) {
-        // console.log(fatb.FindPath(start,finish));
         route = fatb.FindPath(start,finish);
         routeCost = fatb.GetPathCostObject(route);
-        console.log(routeCost);
-        var message = "Your path: ";
-        message += JSON.stringify(routeCost, null, 8);
+        var message = "Your journey plan: \n\n";
+        for(var i=0, max=route.length; i<max; i++) {
+          message += route[i] + "\n";
+        }
+
+        message += "\nTotal time to travel: ";
+        var travelTime = fatb.GetTotalTime(routeCost);
+        var travelTimeMins = 0;
+        if (travelTime > 60) {
+            travelTimeMins = (travelTime / 60).toFixed(0);
+            travelTime = travelTime % 60;
+            message += travelTimeMins + " minutess and " + travelTime + " seconds.\n"
+        } else {
+          message += travelTime + " seconds.\n";
+        }
+
+        
+        // message += JSON.stringify(routeCost, null, 8);
         document.getElementById("results").value = message;
       });
 
@@ -102,9 +129,10 @@
       });
       var selFinishPlace = document.getElementById("finishPlace");
       selFinishPlace.addEventListener("change", function(evt) {
-        console.log("you selected your finish as %s", evt.srcElement.value);
         finish = evt.srcElement.value;
       });
+
+      console.log("%s is loaded.", fatb.VERSION)
     </script>
 </body>
 </html>
