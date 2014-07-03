@@ -116,6 +116,7 @@
                 message += "via: "
               }
 
+              
               var viaProps =  routeCost["via " + route[i]];//FIXME: remove vias
               var info = typeof(viaProps) === "undefined" ? "" : "(" + JSON.stringify(viaProps) + ")";
           message += route[i] + info  + "\n";
