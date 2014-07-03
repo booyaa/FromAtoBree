@@ -6,12 +6,17 @@
     <script src="js/fromatobree-browser.js"></script>
     <!-- Make sure to remove this in production -->
     <!-- include it above the </body> tag -->
-  <script src="dev/node-live-reload.js"></script>
+    <!-- <script src="dev/node-live-reload.js"></script> -->
   </head>
   <body>
-    <table border="0">
+    <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol -->
       <tr><td colspan="2">Configuration</td></tr>
-      <tr><td colspan="2"><input type="range"  min="1" max="9" step="1" id="level"></td></tr>
+      <tr>
+          <td colspan="2">
+            <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
+            <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input--large"> FIXME: why aren't these level?
+          </td>
+      </tr>
       <tr>
         <td>Start</td>
         <td>Finish</td>
@@ -92,7 +97,7 @@
       var inputLevel = document.getElementById("level");
       inputLevel.addEventListener("change", function(evt) {
         // update span text for visual feedback
-        console.log("level: %d", evt.srcElement.value);
+        levelMeter = document.getElementById("levelMeter").value = evt.srcElement.value; 
       });
       selStartRegion.addEventListener("change", onChangeRegion); 
       selFinishRegion.addEventListener("change", onChangeRegion); 
