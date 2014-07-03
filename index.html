@@ -9,8 +9,9 @@
     <!-- <script src="dev/node-live-reload.js"></script> -->
   </head>
   <body>
+    <div id="wrapper">
     <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol -->
-      <tr><td colspan="2">Configuration</td></tr>
+      <tr><td colspan="2">Configuration (not yet functional)</td></tr>
       <tr>
           <td colspan="2">
             <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
@@ -34,8 +35,9 @@
         <td colspan="2"><button id="FindRoute" class="topcoat-button--large">Find Route</button></td>
       </tr>
       <tr>
-        <td colspan="2"><textarea id="results" rows="20" cols="90" class="topcat-textarea--large">choose your starting and ending locations! test.</textarea></td>
-    </table>
+        <td colspan="2"><textarea id="results" rows="15" cols="80" class="topcoat-textarea--large">choose your starting and ending locations! test.</textarea></td>
+      </table>
+    </div>
 
     <script>
       // initialisation
