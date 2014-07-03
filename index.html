@@ -4,8 +4,6 @@
     <link rel="stylesheet" text="text/css" href="css/topcoat-desktop-light.min.css">
     <link rel="stylesheet" text="text/css" href="css/style.css">
     <script src="js/fromatobree-browser.js"></script>
-    <!-- Make sure to remove this in production -->
-    <!-- include it above the </body> tag -->
     <!-- <script src="dev/node-live-reload.js"></script> -->
   </head>
   <body>
@@ -109,8 +107,20 @@
         routeCost = fatb.GetPathCostObject(route);
         var message = "Your journey plan: \n\n";
         for(var i=0, max=route.length; i<max; i++) {
-          message += route[i] + "\n";
+          if (i===0) { 
+            message += "start: ";
+            } else  
+              if (i===max-1) {
+                message += "finish: " 
+              } else { 
+                message += "via: "
+              }
+
+              var viaProps =  routeCost["via " + route[i]];//FIXME: remove vias
+              var info = typeof(viaProps) === "undefined" ? "" : "(" + JSON.stringify(viaProps) + ")";
+          message += route[i] + info  + "\n";
         }
+
 
         message += "\nTotal time to travel: ";
         var travelTime = fatb.GetTotalTime(routeCost);
@@ -118,7 +128,7 @@
         if (travelTime > 60) {
             travelTimeMins = (travelTime / 60).toFixed(0);
             travelTime = travelTime % 60;
-            message += travelTimeMins + " minutess and " + travelTime + " seconds.\n"
+            message += travelTimeMins + " minutes and " + travelTime + " seconds.\n"
         } else {
           message += travelTime + " seconds.\n";
         }

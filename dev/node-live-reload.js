@@ -1,6 +1,8 @@
 // npm install -g node-live-reload
 // uncomment script call in index.html
 
+// do not run this in production unless you like lulz
+// include in head tag
 
 var ws;
 function socket() {
