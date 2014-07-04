@@ -8,5 +8,17 @@
 }
 
 body {
-   padding-left: 25px; 
+   /* padding-left: 25px;  */
+  padding: 1.5em;
+}
+
+
+div#center {
+  width: 100%;
+  text-align: center;
+  /* background-color: #f00;  */
+}
+
+table {
+  margin: 1em auto;
 }

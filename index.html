@@ -7,18 +7,12 @@
     <!-- <script src="dev/node-live-reload.js"></script> -->
   </head>
   <body>
-    <div id="wrapper">
-    <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol -->
-      <tr><td colspan="2">Configuration (not yet functional)</td></tr>
+    <div id="center">
+      <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol -->
+        <tr><td colspan="2">I want to go...</td></tr>
       <tr>
-          <td colspan="2">
-            <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
-            <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input--large"> FIXME: why aren't these level?
-          </td>
-      </tr>
-      <tr>
-        <td>Start</td>
-        <td>Finish</td>
+        <td>From</td>
+        <td>To</td>
       </tr>
       <tr>
         <!-- is autofocus buggy? goes to location after startRegion -->
@@ -30,10 +24,19 @@
         <td><select id="finishPlace" tabindex="3" class="topcoat-button--large"></select></td>
       </tr>
       <tr>
-        <td colspan="2"><button id="FindRoute" class="topcoat-button--large">Find Route</button></td>
+        <td colspan="2"><button id="FindRoute" class="topcoat-button--large">Show me the way</button></td>
       </tr>
+
+      <tr><td colspan="2">Configuration (not yet functional)</td></tr>
       <tr>
-        <td colspan="2"><textarea id="results" rows="15" cols="80" class="topcoat-textarea--large">choose your starting and ending locations! test.</textarea></td>
+          <td colspan="2">
+            <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
+            <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input--large"> FIXME: why aren't these level?
+          </td>
+        </tr>
+
+      <tr>
+        <td colspan="2"><textarea id="results" rows="15" cols="60" class="topcoat-textarea--large">choose your starting and ending locations! test.</textarea></td>
       </table>
     </div>
 
@@ -105,25 +108,24 @@
       button.addEventListener("click", function(evt) {
         route = fatb.FindPath(start,finish);
         routeCost = fatb.GetPathCostObject(route);
-        var message = "Your journey plan: \n\n";
+        var message = "";
         for(var i=0, max=route.length; i<max; i++) {
           if (i===0) { 
-            message += "start: ";
+            message += "Starting from: ";
             } else  
               if (i===max-1) {
-                message += "finish: " 
+                message += "Destination: " 
               } else { 
                 message += "via: "
               }
 
-              
               var viaProps =  routeCost["via " + route[i]];//FIXME: remove vias
-              var info = typeof(viaProps) === "undefined" ? "" : "(" + JSON.stringify(viaProps) + ")";
+              var info = typeof(viaProps) === "undefined" ? "" : "(" + JSON.stringify(viaProps) + ")";//FIXME: for handling start, could we do better?
           message += route[i] + info  + "\n";
         }
 
 
-        message += "\nTotal time to travel: ";
+        message += "\nIt'll take you ";
         var travelTime = fatb.GetTotalTime(routeCost);
         var travelTimeMins = 0;
         if (travelTime > 60) {
