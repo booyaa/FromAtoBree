@@ -4,7 +4,7 @@
     <link rel="stylesheet" text="text/css" href="css/topcoat-desktop-light.min.css">
     <link rel="stylesheet" text="text/css" href="css/style.css">
     <script src="js/fromatobree-browser.js"></script>
-    <!-- <script src="dev/node-live-reload.js"></script> -->
+    <script src="dev/node-live-reload.js"></script>
   </head>
   <body>
     <div id="center">
@@ -108,6 +108,7 @@
       button.addEventListener("click", function(evt) {
         route = fatb.FindPath(start,finish);
         routeCost = fatb.GetPathCostObject(route);
+        console.dir(routeCost);
         var message = "";
         for(var i=0, max=route.length; i<max; i++) {
           if (i===0) { 
@@ -119,7 +120,7 @@
                 message += "via: "
               }
 
-              var viaProps =  routeCost["via " + route[i]];//FIXME: remove vias
+              var viaProps =  routeCost[route[i]];
               var info = typeof(viaProps) === "undefined" ? "" : "(" + JSON.stringify(viaProps) + ")";//FIXME: for handling start, could we do better?
           message += route[i] + info  + "\n";
         }

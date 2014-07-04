@@ -24,9 +24,11 @@ var dijkstra = _dereq_('dijkstrajs') // we have a winner
   , find_path = dijkstra.find_path;
 
 var options = { level : 69, swiftTravel : true };
-var stables = _dereq_('./stable_raw.js');
+var data = _dereq_('./stable_raw.js');
+var stables = data.stables;
+var requirements = data.reqs;
 
-exports.VERSION = "1.0.2";
+exports.VERSION = "1.0.3";
 
 exports.STABLES = stables;
 
@@ -108,14 +110,15 @@ exports.FATB = graph;
 exports.GetPathCostObject = function(path) {
   var start = path[0];
   var next = start;
-  var costObject = {"start": start};
+  var costObject = {};
+  costObject[start] = {};
 
-  var keyname = "via ";
+  // var keyname = "via ";
   for(var i=1; i<path.length; i++) {
     var dest = path[i];
 
     var via = stables[next].d[dest];
-    costObject[keyname + dest] = via;
+    costObject[dest] = via;
  
     next = dest;
   }
@@ -167,64 +170,27 @@ exports.GetTotalTime = function(route) {
 
   return time;
 }
-// var graph = CreateGraph();
-// var path = require('path');
-// 
-// if (process.argv.length < 3) {
-//   console.log("usage:");
-//   console.log("%s <place> - lookup place", path.basename(process.argv[1]));
-//   console.log("%s <start> <finish> - plan route", path.basename(process.argv[1]));
-//   return;
-// }
-// 
-// var startArg = process.argv[2];
-// var finishArg = process.argv[3];
-// 
-// console.log("args start %s finish %s", startArg, finishArg);
-// 
-// var start = GetPlace(startArg)[0]; // get first
-// var finish = GetPlace(finishArg)[0]; // get first
-// 
-// if (typeof(finishArg) === "undefined") {
-//   console.log("Matches for %s %s", startArg, JSON.stringify(GetPlace(startArg)))
-//   return;
-// }
-// console.log("GetPlace start %s finish %s", start, finish);
-// 
-// if (typeof start !== "undefined" && typeof finish !== "undefined") {
-//   var path = find_path(graph, start, finish);
-//   console.log("your route: ", path);
-// 
-//   console.log('--------');
-//   var costObject = GetPathCostObject(path); 
-//   console.dir(costObject);
-// 
-//   var cost = 0;
-//   var time = 0;
-// 
-//   for (var place in costObject ) {
-//     var hasCost = costObject[place].hasOwnProperty("c");
-//     var hasSTCost = costObject[place].hasOwnProperty("s");
-//     var hasTime = costObject[place].hasOwnProperty("t");
-//     var hasSTTime = costObject[place].hasOwnProperty("st");
-// 
-//     console.log("place %s cost %d obj %j", place, hasCost, costObject[place]);
-// 
-//     cost += hasCost ? parseInt(costObject[place].c) : 0;
-//     cost += hasSTCost ? parseInt(costObject[place].s) : 0;
-// 
-//     time += hasTime ? parseInt(costObject[place].t) : 0;
-//     time += hasSTTime ? parseInt(costObject[place].st) : 0;
-//   }
-// 
-//   console.log("cost %d time %s", cost, time);
-// 
-// } else {
-//   console.log("No matches for either start (%s) or finish (%s) locations", startArg, finishArg);
-// }
+
+exports.GetMetaData = function(place) {
+  var metadata = {};
+  for (var prop in stables[place]) {
+    // // exclude destination and area data
+    if (prop !== "d" && prop !== "z" && prop !== "a") {
+      var key = "";
+      if (prop === "l") key = "gps coords";
+      if (prop === "ml") key = "min level";
+      if (prop === "t") key = "time";
+      if (prop === "td") key = "reqs";
+      if (key === "") key = prop;
+
+      metadata[key] = stables[place][prop];
+    }
+  }
+  return metadata;
+}
 
 },{"./stable_raw.js":2,"dijkstrajs":3}],2:[function(_dereq_,module,exports){
-module.exports = stables = {
+module.exports.stables = {
                   "Adso's Camp": {
                                       "d": {
                                                 "Buckland": {
@@ -5595,7 +5561,65 @@ module.exports = stables = {
                                      "td": "R17",
                                       "z": "Moria"
                                  }
-}
+};
+module.exports.reqs = {
+     "D1": "Silent and Restless",
+    "D13": "Ally of Lothlorien",
+    "D14": "Defender of Lothlorien",
+    "D15": "Warrior of Lothlorien",
+    "D16": "Into the Black and Twisted Forest",
+    "D17": "Into the Black and Twisted Forest (Int.)",
+    "D18": "Into the Black and Twisted Forest (Adv.)",
+     "D2": "Silent and Restless (Intermediate)",
+     "D3": "Silent and Restless (Advanced)",
+     "D4": "Silent and Restless (Final)",
+     "D5": "Mysteries of Enedwaith",
+     "D6": "Mysteries of Enedwaith (Intermediate)",
+     "D7": "Mysteries of Enedwaith (Advanced)",
+     "Q1": "Book 6. Chapter 6",
+     "Q2": "The Frozen War",
+     "Q3": "The Paths of Caras Galadhon",
+     "Q4": "Chapter 5: Into the Fire",
+     "Q5": "Chapter 8: The Twenty-first Hall",
+     "Q6": "The Stable: Rebuild",
+     "R1": "Acq. with Men of Bree",
+    "R10": "Friend with Mathom Society",
+    "R11": "Friend with Men of Bree",
+    "R12": "Friend with Rangers of Esteldin",
+    "R13": "Friend with The Eglain",
+    "R14": "Friend with Lossoth of Forochel",
+    "R15": "Friend with Council of the North",
+    "R16": "Friend with The Grey Company",
+    "R17": "Friend with Iron Garrison Guards",
+    "R18": "Friend with Iron Garrison Miners",
+    "R19": "Friend with Malledhrim",
+     "R2": "Acq. with Elves of Rivendell",
+    "R20": "Friend with Men of Dunland",
+    "R21": "Friend with Algraig",
+    "R22": "Friend with Theodred's Riders",
+    "R23": "Friend with Men of the Wold",
+    "R24": "Friend with Men of the Norcrofts",
+    "R25": "Friend with Men of the Sutcrofts",
+    "R26": "Friend with Riders of Stangard",
+    "R27": "Friend with Men of Entwash Vale",
+    "R28": "Ally with Men of the Wold",
+    "R29": "Ally with Men of the Norcrofts",
+     "R3": "Acq. with Lossoth of Forochel",
+    "R30": "Ally with Men of the Sutcrofts",
+    "R31": "Ally with Men of Entwash Vale",
+    "R32": "Friend with People of Wildermore",
+    "R33": "Friend with The Eorlingas",
+    "R34": "Friend with The Helmingas",
+     "R4": "Acq. with Council of the North",
+     "R5": "Acq. with Rangers of Esteldin",
+     "R6": "Friend with Wardens of Annuminas",
+     "R7": "Friend with Elves of Rivendell",
+     "R8": "Friend with Galadhrim",
+     "R9": "Friend with Thorin's Hall",
+     "S0": "Current or past subscriber",
+     "S1": "Requires VIP account",
+     "S2": "Writ of Passage/Founder's discount"
+};
 
 },{}],3:[function(_dereq_,module,exports){
 /******************************************************************************
