@@ -9,7 +9,7 @@
   </head>
   <body>
     <div id="center">
-      <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol --!>
+      <table border="0" cellpadding="5" width="60%"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol --!>
         <tr><td colspan="2">I want to go...</td></tr>
       <tr>
         <td>From</td>
@@ -112,7 +112,6 @@
       button.addEventListener("click", function(evt) {
         route = fatb.FindPath(start,finish);
         routeCost = fatb.GetPathCostObject(route);
-        console.dir(routeCost);
         var message = "";
         for(var i=0, max=route.length; i<max; i++) {
           if (i===0) { 
@@ -129,7 +128,6 @@
 
               var info = "";
 
-              console.log(route[i], Object.keys(viaProps)); 
               if (Object.keys(viaProps).length > 0) {
                 info = " ("; 
                 if (viaProps.hasOwnProperty("st")) {
