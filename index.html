@@ -1,8 +1,8 @@
 <html>
   <head>
     <title>From A to Bree - LotRO middle earth journey planner</title>
-    <link rel="stylesheet" type="text/css" href="css/topcoat-mobile-light.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/topcoat-mobile-light.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
     <script src="js/fromatobree-browser.js"></script>
     <meta name="viewport" content="width=device-width, user-scalable=no">
@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="center">
-      <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol --!>
+      <table border="1" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol --!>
         <tr><td colspan="2">I want to go...</td></tr>
       <tr>
         <td>From</td>
@@ -38,10 +38,8 @@
         </tr>
 
         <tr>
-          <td colspan="2"><div id="results2">choose your starting and ending locations!</div></td>
+          <td colspan="2"><div id="results">choose your starting and ending locations!</div></td>
         </tr>
-        <!-- <tr> -->
-        <!--   <td colspan="2"><textarea id="results" rows="15" cols="60" class="topcoat-textarea--large">choose your starting and ending locations! test.</textarea></td></tr> -->
       </table>
     </div>
 
@@ -116,12 +114,15 @@
         var message = "";
         for(var i=0, max=route.length; i<max; i++) {
           if (i===0) { 
-            message += '<i class="icon-map-marker"></i>Starting from: ';
+            message += '<span class="icon-map-marker"></span>&nbsp;Starting from: ';
+            // message += "Starting from:";
             } else  
               if (i===max-1) {
-                message += '<i class="icon-map-marker"></i>Destination: '; 
+                message += '<span class="icon-map-marker"></span>&nbsp;Destination: '; 
+                // message += "Destination: ";
               } else { 
-              message += '<i class="icon-arrow-right">via: ';
+              message += '<span class="icon-arrow-right"></span>&nbsp;via: ';
+                // message += "via: ";
               }
 
               var viaProps =  routeCost[route[i]];
@@ -132,7 +133,7 @@
               if (Object.keys(viaProps).length > 0) {
                 info = " ("; 
                 if (viaProps.hasOwnProperty("st")) {
-                  info += '<acronym title="swift travel"><i class="icon-fast-forward"></i></acronym>&nbsp;&nbsp;';
+                  info += '<acronym title="swift travel"><span class="icon-forward"></span></acronym>&nbsp;&nbsp;';
                 }
 
                 var restrictions = "";
@@ -144,13 +145,13 @@
                 };
 
                 if (restrictions != "") {  
-                  info += '<acronym title="' + restrictions + '"><i class="icon-key"></i></acronym>&nbsp;';
+                  info += '<acronym title="' + restrictions + '"><span class="icon-key"></span></acronym>&nbsp;';
                 }
 
                 info += ")";
-                //+ JSON.stringify(viaProps) + ")";//FIXME: for handling start, could we do better? 
               }
               message += route[i] + info  + "<br /><br />";
+              // message += route[i] + "<br /><br />";
         }
 
 
@@ -165,12 +166,12 @@
           message += travelTime + " seconds.\n";
         }
 
-        
-        // message = message.replace("\n", "<br />");
+
+        message += "<br />choose your starting and ending locations!";
         console.log(message);
         // message += JSON.stringify(routeCost, null, 8);
         // document.getElementById("results").value = message;
-        document.getElementById("results2").innerHTML = message;
+        document.getElementById("results").innerHTML = message;
       });
 
       var selStartPlace = document.getElementById("startPlace");
