@@ -1,11 +1,11 @@
 <html>
   <head>
     <title>From A to Bree - LotRO middle earth journey planner</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
     <link rel="stylesheet" type="text/css" href="css/topcoat-mobile-light.min.css">
     <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="js/fromatobree-browser.js"></script>
-    <meta name="viewport" content="width=device-width,initial-scale=0.9">
+    <meta name="viewport" content="width=device-width,initial-scale=0.6, maximum-scale=0.6">
     <!-- <script src="dev/node-live-reload.js"></script> -->
   </head>
   <body>
@@ -29,16 +29,24 @@
         <td colspan="2"><button id="FindRoute" class="topcoat-button">Show me the way</button></td>
       </tr>
 
-      <tr><td colspan="2">Configuration (not yet functional)</td></tr>
+      <tr><td colspan="2">Configuration (doesn't work yet)</td></tr>
       <tr>
           <td colspan="2">
             <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
-            <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input"> FIXME: why aren't these level?
+            <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input">
           </td>
         </tr>
 
         <tr>
           <td colspan="2"><div id="results">choose your starting and ending locations!</div></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <strong>Legend</strong><br />
+            hover over icons on destination for details:<br/>
+            <span class="icon-key"></span>&nbsp;Requires quest or reputation.<br/>
+            <span class="icon-forward"></span>&nbsp;Swift travel<br />
+          </td>
         </tr>
       </table>
     </div>
@@ -155,22 +163,21 @@
         }
 
 
-        message += "\nIt'll take you ";
+        message += "It'll take you ";
         var travelTime = fatb.GetTotalTime(routeCost);
         var travelTimeMins = 0;
         if (travelTime > 60) {
-            travelTimeMins = (travelTime / 60).toFixed(0);
-            travelTime = travelTime % 60;
-            message += travelTimeMins + " minutes and " + travelTime + " seconds.\n"
+          travelTimeMins = (travelTime / 60).toFixed(0);
+          travelTime = travelTime % 60;
+          message += travelTimeMins + " minutes and " + travelTime + " seconds.<br />";
         } else {
-          message += travelTime + " seconds.\n";
+          message += travelTime + " seconds.</br >";
         }
 
 
-        message += "<br />choose your starting and ending locations!";
-        console.log(message);
         // message += JSON.stringify(routeCost, null, 8);
         // document.getElementById("results").value = message;
+
         document.getElementById("results").innerHTML = message;
       });
 

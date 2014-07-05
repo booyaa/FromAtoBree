@@ -7,10 +7,21 @@ body {
   padding: 1.5em;
 }
 
+.topcoat-range {
+  vertical-align: middle;
+}
+
+.topcoat-text-input {
+  vertical-align: middle;
+}
+
+.topcoat-button {
+  width: 15em;
+}
+
 div#center {
   width: 100%;
   text-align: center;
-  /* background-color: #f00;  */
 }
 
 table {
