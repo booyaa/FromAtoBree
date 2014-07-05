@@ -22,8 +22,10 @@ body {
 div#center {
   width: 100%;
   text-align: center;
+  /* background-color: #f00; */
 }
 
 table {
+  width: 70%;
   margin: 1em auto;
 }
