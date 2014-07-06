@@ -71,6 +71,7 @@ test("Get a list of regions", function(t) {
   t.end();
 });
 
+
 //TODO: meta data needs to be rejigged
 // place : { d : dests contains swift travel data }
 // test("Get meta data about place", function(t) {
@@ -87,4 +88,5 @@ test("Get a list of regions", function(t) {
 //   t.deepEquals(metadata, expected);
 //   t.end();
 // });
+
 
