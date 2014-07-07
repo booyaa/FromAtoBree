@@ -16,3 +16,9 @@ test("we do not have options", function(t) {
   t.end();
 });
 
+test("create graph with no options", function(t) {
+  var graph = fatb.createGraph();
+
+  t.equal(typeof(graph), "object");
+  t.end();
+});
