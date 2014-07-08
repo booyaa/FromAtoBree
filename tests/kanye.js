@@ -17,8 +17,51 @@ test("we do not have options", function(t) {
 });
 
 test("create graph with no options", function(t) {
-  var graph = fatb.createGraph();
-
-  t.equal(typeof(graph), "object");
+  var graph = fatb.createGraph(); //FIXME: this will fail if there's no stable data
+  t.equal(graph["West Bree"]["Esteldin"], 1);
   t.end();
 });
+
+
+test("create graph with options, but level reqs not met", function(t) {
+  var options = fatb.setup({level: 29});
+  var graph = fatb.createGraph(true);
+
+  t.equal(graph["West Bree"]["Esteldin"], 101);
+  t.end();
+});
+
+test("create graph with options, but level reqs met", function(t) {
+  var options = fatb.setup({level: 30});
+  var graph = fatb.createGraph(true);
+
+  t.equal(graph["West Bree"]["Esteldin"], 1);
+  t.end();
+});
+
+test("create graph with options, but standing reqs not met", function(t) {
+  var options = fatb.setup({standing: []});
+  var graph = fatb.createGraph(true);
+
+  // t.equal(graph["Aughaire"]["Gabilshathur"], 101);
+  t.equal(graph["Harwick"]["Hytbold"], 101);
+  t.end();
+});
+
+test("create graph with options, but standing reqs met", function(t) {
+  var options = fatb.setup({standing: ["R28","Q6"]});
+  var graph = fatb.createGraph(true);
+
+  t.equal(graph["Harwick"]["Hytbold"], 1);
+  t.end();
+});
+// test("compare graphs", function(t) {
+//   var options = fatb.setup({level: 50, standing: ["R1","R2"]});
+//   var graphWeighted = fatb.createGraph(options);
+//   var graph = fatb.createGraph();
+// 
+//   t.deepEquals(graph, graphWeighted);
+//   t.end();
+// });
+
+
