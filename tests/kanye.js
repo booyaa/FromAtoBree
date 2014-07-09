@@ -32,16 +32,16 @@ test("find a route,but with both level and quest reqs met", function(t) {
   t.end();
 });
 
-test("fail to find aroute from ost guruth to the twenty first hall", function(t) {
-  var options = fatb.setup({level: 30});
-  fatb.graph = fatb.createGraph(true);
-
-  var start = fatb.GetPlace("Ost Gur")[0];
-  var finish = fatb.GetPlace("Twenty")[0];
-
-  t.throws(fatb.FindPath(start, finish), "Error: No path found from Ost Guruth to Twenty-first Hall because you have not met the minimum requirements.");
-  t.end();
-});
+// test("fail to find aroute from ost guruth to the twenty first hall", function(t) {
+//   var options = fatb.setup({level: 30});
+//   fatb.graph = fatb.createGraph(true);
+// 
+//   var start = fatb.GetPlace("Ost Gur")[0];
+//   var finish = fatb.GetPlace("Twenty")[0];
+// 
+//   t.throws(fatb.FindPath(start, finish), "Error: No path found from Ost Guruth to Twenty-first Hall because you have not met the minimum requirements.");
+//   t.end();
+// });
 
 
 // test("create graph with options, but standing reqs met", function(t) {
