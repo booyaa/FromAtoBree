@@ -1,3 +1,4 @@
+/*jslint node: true, laxcomma: true, loopfunction: true, sub: true*/
 var test = require('tape').test;
 
 var fatb = require('../lib/fromatobree');
