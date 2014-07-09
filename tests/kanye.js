@@ -32,6 +32,16 @@ test("find a route,but with both level and quest reqs met", function(t) {
   t.end();
 });
 
+test("find a from ost guruth to the twenty first hall", function(t) {
+  var options = fatb.setup({level: 30});
+  fatb.graph = fatb.createGraph(true);
+
+  var start = fatb.GetPlace("Ost Gur");
+  var finish = fatb.GetPlace("Twenty");
+  t.deepEquals(fatb.FindPath(start, finish), [start, finish]);
+  t.end();
+});
+
 
 // test("create graph with options, but standing reqs met", function(t) {
 //   var options = fatb.setup({standing: ["R28","Q6"]});
