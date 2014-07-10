@@ -32,6 +32,26 @@ test("find a route,but with both level and quest reqs met", function(t) {
   t.end();
 });
 
+test("find a route hobbiton suri kyle", function(t) {
+  var graph = fatb.createGraph(true);
+
+  var start = "Hobbiton";
+  var finish = "Suri-kyla";
+
+  t.deepEquals(fatb.FindPath(start, finish), [start, "West Bree", "Ost Forod", "Kauppa-kohta", "Pynti-peldot", finish]);
+  t.end();
+});
+
+test("find a route hobbiton suri kyle", function(t) {
+  var options = fatb.setup({level: 50, standing: "R3"});
+  fatb.graph = fatb.createGraph(true);
+
+  var start = "Hobbiton";
+  var finish = "Suri-kyla";
+
+  t.deepEquals(fatb.FindPath(start, finish), [start, 'West Bree', finish]);
+  t.end();
+});
 // test("fail to find aroute from ost guruth to the twenty first hall", function(t) {
 //   var options = fatb.setup({level: 30});
 //   fatb.graph = fatb.createGraph(true);
@@ -51,3 +71,5 @@ test("find a route,but with both level and quest reqs met", function(t) {
 //   t.equal(graph["Harwick"]["Hytbold"], 1);
 //   t.end();
 // });
+//
+//
