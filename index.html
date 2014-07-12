@@ -94,8 +94,10 @@
 
       // events
       function onChangeRegion(evt) {
-        var region = evt.srcElement.value;
-        var source = /^(start|finish)Region/.exec(evt.srcElement.id)[1]; 
+        // var region = evt.srcElement.value;
+        var region = evt.target.value;
+        // var source = /^(start|finish)Region/.exec(evt.srcElement.id)[1]; 
+        var source = /^(start|finish)Region/.exec(evt.target.id)[1]; 
         var places = fatb.GetPlacesByRegion(region);
         var selPlace = document.getElementById(source+"Place");
 
@@ -117,7 +119,8 @@
       var inputLevel = document.getElementById("level");
       inputLevel.addEventListener("change", function(evt) {
         // update span text for visual feedback
-        levelMeter = document.getElementById("levelMeter").value = evt.srcElement.value; 
+        // levelMeter = document.getElementById("levelMeter").value = evt.srcElement.value; 
+        levelMeter = document.getElementById("levelMeter").value = evt.target.value; 
       });
       selStartRegion.addEventListener("change", onChangeRegion); 
       selFinishRegion.addEventListener("change", onChangeRegion); 
@@ -189,13 +192,16 @@
 
       var selStartPlace = document.getElementById("startPlace");
       selStartPlace.addEventListener("change", function(evt) {
-        console.log("you selected your start as %s", evt.srcElement.value);
-        start = evt.srcElement.value;
+        // console.log("you selected your start as %s", evt.srcElement.value);
+        console.log("you selected your start as %s", evt.target.value);
+        // start = evt.srcElement.value;
+        start = evt.target.value;
 
       });
       var selFinishPlace = document.getElementById("finishPlace");
       selFinishPlace.addEventListener("change", function(evt) {
-        finish = evt.srcElement.value;
+        // finish = evt.srcElement.value;
+        finish = evt.target.value;
       });
 
       console.log("%s is loaded.", fatb.VERSION)
