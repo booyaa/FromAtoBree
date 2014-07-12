@@ -1,5 +1,9 @@
 #FromAtoBree
 
+##warning
+
+version_2 branch is very borken at the moment. do not use! stick to the master or better still the [webtoy](http://booyaa.github.io/FromAtoBree/).
+
 A route planner for Lord of the Rings Online.
 
 [![browser support](https://ci.testling.com/booyaa/FromAtoBree.png)
