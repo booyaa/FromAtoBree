@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var fatb = require('../lib/fromatobree'),
+var FATB = require('../lib/fromatobree'),
     path = require('path');
 
 if (process.argv.length < 3) {
@@ -13,12 +13,13 @@ if (process.argv.length < 3) {
   return;
 }
 
+var fatb = new FATB(); //FIXME: how do we plan on handling options?
 var startArg = process.argv[2];
 var finishArg = process.argv[3];
 
 //FIXME: use a better args parser!
 if (startArg === "listplaces") {
-  console.log("Regions in the %s:\n", finishArg, fatb.GetPlacesByRegion(finishArg));
+  console.log("Regions in the %j:\n", finishArg, fatb.GetPlacesByRegion(finishArg));
   return;
 }
 
@@ -30,7 +31,7 @@ if (startArg === "listregions") {
 }
 
 if (startArg === "lookup") {
-  console.log("Matches for %s %s", finishArg, JSON.stringify(fatb.GetPlace(finishArg)));
+  console.log("Matches for %s:\n\t%s", finishArg, JSON.stringify(fatb.GetPlace(finishArg)));
   return;
 }
 
@@ -45,11 +46,11 @@ if (typeof start === "undefined" || typeof finish === "undefined") {
 }
 
 var route  = fatb.FindPath(start, finish);
-console.log("Your route: ", route);
+console.log("Your route: %j", route);
 
-var routeCost = fatb.GetPathCostObject(route); 
+// var routeCost = fatb.GetPathCostObject(route); 
+// 
+// var cost = fatb.GetTotalCost(routeCost);
+// var time = fatb.GetTotalTime(routeCost);
 
-var cost = fatb.GetTotalCost(routeCost);
-var time = fatb.GetTotalTime(routeCost);
-
-console.log("Total cost for route %d, the journey will take time %d seconds or  %d mins", cost, time, Math.round(time/60));
+// console.log("Total cost for route %d, the journey will take time %d seconds or  %d mins", cost, time, Math.round(time/60));
