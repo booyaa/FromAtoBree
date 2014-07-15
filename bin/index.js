@@ -12,6 +12,7 @@ if (process.argv.length < 3) {
   console.log("%s lookup <place> - lookup place", whodis);
   console.log("%s listregions - lists regions", whodis);
   console.log("%s listplaces <region> - list places for a given region", whodis);
+  console.log("%s listreqs <term> - list codes for factions or quests", whodis);
   console.log("\nto impose restrictions, create a config file called .fromatobree.json in your");
   console.log(" home directory. The format is:");
   var exampleConfig = { weighting: true, level: 40, standing: ["Q1", "R1"] };
