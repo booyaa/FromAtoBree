@@ -39,7 +39,9 @@ console.log(dotFileName);
     opts_from_file.standing = dotfile.standing;
   } catch(e) {
     // no config file, use optimist defaults
-    console.log(e);
+    if (e.errno !== 34) {
+      console.log(e);
+    } 
   }
 
   return opts_from_file;
@@ -72,7 +74,7 @@ if (startArg === "lookup") {
 var start = fatb.GetPlace(startArg)[0]; // get first
 var finish = fatb.GetPlace(finishArg)[0]; // get first
 
-console.log("From A to Bree v%s\n", fatb.version);
+console.log("From A to Bree v%s\n", FATB.version);
 console.log("From: %s To: %s\n", start, finish);
 
 if (typeof start === "undefined" || typeof finish === "undefined") {
