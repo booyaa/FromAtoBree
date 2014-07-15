@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-var FATB = require('../lib/fromatobree'),
-    path = require('path');
+
+var path = require('path');
+var whodis = path.basename(process.argv[1]);
 
 if (process.argv.length < 3) {
-  var whodis = path.basename(process.argv[1]);
   console.log("usage:");
   console.log("%s <start> <finish> - plan route", whodis);
   console.log("%s lookup <place> - lookup place", whodis);
@@ -13,6 +13,7 @@ if (process.argv.length < 3) {
   return;
 }
 
+var FATB = require('../lib/fromatobree');
 var fatb = new FATB(); //FIXME: how do we plan on handling options?
 var startArg = process.argv[2];
 var finishArg = process.argv[3];
@@ -38,7 +39,8 @@ if (startArg === "lookup") {
 var start = fatb.GetPlace(startArg)[0]; // get first
 var finish = fatb.GetPlace(finishArg)[0]; // get first
 
-console.log("Start: %s => Finish: %s", start, finish);
+console.log("From A to Bree v%s\n", fatb.version);
+console.log("From: %s To: %s\n", start, finish);
 
 if (typeof start === "undefined" || typeof finish === "undefined") {
   console.log("No matches for either start (%s) or finish (%s) locations", startArg, finishArg);
@@ -46,11 +48,15 @@ if (typeof start === "undefined" || typeof finish === "undefined") {
 }
 
 var route  = fatb.FindPath(start, finish);
-console.log("Your route: %j", route);
+console.log("Your route:");
+route.forEach(function(name) {
+  console.log("\t%s", name);
+});
 
-// var routeCost = fatb.GetPathCostObject(route); 
-// 
-// var cost = fatb.GetTotalCost(routeCost);
-// var time = fatb.GetTotalTime(routeCost);
 
-// console.log("Total cost for route %d, the journey will take time %d seconds or  %d mins", cost, time, Math.round(time/60));
+var cost = fatb.GetTotalCost(route);
+var time = fatb.GetTotalTime(route);
+
+console.log("Total cost for route %d in silver, and the journey will take %s.\n", cost, time > 60 ? Math.round(time/60) + " mins" : time + " seconds");
+
+
