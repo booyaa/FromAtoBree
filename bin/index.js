@@ -5,16 +5,17 @@ var FATB = require('../lib/fromatobree');
 var path = require('path');
 var whodis = path.basename(process.argv[1]);
 
+console.log("From A to Bree v%s\n", FATB.version);
+
 if (process.argv.length < 3) {
-  console.log("From A to Bree v%s", FATB.version);
   console.log("usage:");
-  console.log("%s <start> <finish> - plan route", whodis);
-  console.log("%s lookup <place> - lookup place", whodis);
-  console.log("%s listregions - lists regions", whodis);
+  console.log("%s <start> <finish>    - plan route", whodis);
+  console.log("%s lookup <place>      - lookup place", whodis);
+  console.log("%s listregions         - lists regions", whodis);
   console.log("%s listplaces <region> - list places for a given region", whodis);
   console.log("%s listreqs <term> - list codes for factions or quests", whodis);
   console.log("\nto impose restrictions, create a config file called .fromatobree.json in your");
-  console.log(" home directory. The format is:");
+  console.log("home directory. The format is:");
   var exampleConfig = { weighting: true, level: 40, standing: ["Q1", "R1"] };
   console.log("%s", JSON.stringify(exampleConfig, null, 2));
   console.log("key:");
@@ -30,7 +31,6 @@ if (process.argv.length < 3) {
 function getConfig() {
   var tilde = process.env[(process.platform === 'win32') ? "USERPROFILE" : "HOME"];
   var dotFileName = path.join(tilde, '.fromatobree.json');
-console.log(dotFileName);
   var opts_from_file = {};
   try {
     var fs = require('fs');
@@ -54,17 +54,41 @@ var fatb = new FATB(options);
 var startArg = process.argv[2];
 var finishArg = process.argv[3];
 
-//FIXME: use a better args parser!
+
 if (startArg === "listplaces") {
-  console.log("Regions in the %j:\n", finishArg, fatb.GetPlacesByRegion(finishArg));
+  console.log("Regions in the %s:", finishArg);
+  fatb.GetPlacesByRegion(finishArg).forEach(function(place) {
+    console.log("\t%s", place);
+  });
   return;
 }
 
 if (startArg === "listregions") {
-  console.log("list regions");
+  console.log("List regions");
 
-  console.log("%j", fatb.GetRegions());
+  fatb.GetRegions().forEach(function(region) {
+    console.log("\t%s", region);
+  });
   return; 
+}
+
+if (startArg === "listreqs") {
+  console.log("List standing/quest requirement codes");
+  if (typeof(finishArg) !== "undefined") {
+    console.log("\nMatching term: %s", finishArg);
+  }
+
+
+  var reqs = fatb.GetRequirements(finishArg);
+  if (Object.keys(reqs).length === 0) {
+    console.log("\nNothing found!");
+    return;
+  }
+  console.log("\nCode\tDescription");
+  for(var code in reqs) {
+    console.log("%s\t%s", code, reqs[code]);
+  }
+  return;
 }
 
 if (startArg === "lookup") {
@@ -75,7 +99,6 @@ if (startArg === "lookup") {
 var start = fatb.GetPlace(startArg)[0]; // get first
 var finish = fatb.GetPlace(finishArg)[0]; // get first
 
-console.log("From A to Bree v%s\n", FATB.version);
 console.log("From: %s To: %s\n", start, finish);
 
 if (typeof start === "undefined" || typeof finish === "undefined") {
