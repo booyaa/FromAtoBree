@@ -1,9 +1,9 @@
 /*jslint node: true, laxcomma: true, loopfunction: true, sub: true*/
 var test = require('tape').test;
 
-// for path finding tests
 var FATB = require('../lib/fromatobree'); 
 
+// for cost and time testing
 test("Level requirement test", function(t) {
   var start = "Needlehole";
   var finish = "Ost Guruth";
