@@ -4,6 +4,38 @@ var test = require('tape').test;
 var FATB = require('../lib/fromatobree'); 
 
 // for cost and time testing
+
+test("Get metadata object for path", function(t) {
+  var start = "Needlehole";
+  var finish = "Ost Guruth";
+  var fatb = new FATB({weighting:true, level:10});
+  var route = fatb.FindPath(start, finish);
+  var metadata = fatb.GetPathCostObject(route);
+  var expected = {
+    Hobbiton            : { c: 1, t: 166 }
+    ,Needlehole         : {}
+    ,'West Bree'        : { c: 5, t: 337 }
+    ,'South Bree'       : { mt: 75, s: 1, st: 18 }
+    ,'The Forsaken Inn' : { c: 5, t: 190 }
+    ,'Ost Guruth'       : { c:15, t: 203 }
+  };
+  t.deepEquals(metadata, expected, "Should return a path cost object based on not meeting reqs");
+
+  fatb = new FATB({weighting:true, level:15});
+  route = fatb.FindPath(start, finish);
+  metadata = fatb.GetPathCostObject(route);
+  expected = {
+    Hobbiton            : { c: 1, t: 166 }
+    ,Needlehole         : {}
+    ,'West Bree'        : { c: 5, t: 337 }
+    ,'South Bree'       : { mt: 75, s: 1, st: 18 }
+    ,'Ost Guruth'       : { l:15, s: 20, st: 24 }
+  };
+  t.deepEquals(metadata, expected, "Should return a path cost object based on meeting reqs");
+  
+  t.end();
+
+});
 test("Level requirement test", function(t) {
   var start = "Needlehole";
   var finish = "Ost Guruth";

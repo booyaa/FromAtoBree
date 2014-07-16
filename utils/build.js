@@ -6,7 +6,7 @@ var uglifyjs   = require('uglify-js');
 var browserify = require('browserify');
 
 function bundle(file, callback) {
-  var opts = { standalone: 'fatb' };
+  var opts = { standalone: 'FATB' };
   browserify(file).bundle(opts, callback);
 }
 
