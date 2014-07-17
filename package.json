@@ -1,6 +1,6 @@
 {
   "name": "fromatobree",
-  "version": "1.0.5",
+  "version": "2.1.3",
   "description": "From A to Bree - a middle earth journey planner for Lord of the Rings Online",
   "main": "lib/fromatobree.js",
   "bin": {
