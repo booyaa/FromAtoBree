@@ -19,6 +19,9 @@ body {
   width: 15em;
 }
 
+.topcoat-range {
+  width: 90%;
+}
 div#center {
   width: 100%;
   text-align: center;
@@ -26,6 +29,15 @@ div#center {
 }
 
 table {
-  width: 70%;
+  width: 80%;
   margin: 1em auto;
+}
+
+.foo.topcoat-checkbox {
+  width: 20em;
+  /* background-color: #B0B6B6; */
+}
+
+.topcoat-checkbox__checkmark {
+  float: left;
 }

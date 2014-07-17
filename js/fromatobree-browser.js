@@ -19,80 +19,66 @@ d88'`?88P'd88'     `?888P'`?888P'
                                  
 -=[ https://github.com/booyaa/FromAtoBree ]=-
  */
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.fatb=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.FATB=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
+/*jslint node: true, laxcomma: true, loopfunc: true*/
+// http://www.jshint.com/docs/options/
 var dijkstra = _dereq_('dijkstrajs') // we have a winner
   , find_path = dijkstra.find_path;
 
-var options = { level : 69, swiftTravel : true };
-var data = _dereq_('./stable_raw.js');
-var stables = data.stables;
-var requirements = data.reqs;
+// private variables
+var stables = _dereq_('./stable_raw').stables;
+var reqs = _dereq_('./stable_raw').reqs;
 
-exports.VERSION = "1.0.3";
-
-exports.STABLES = stables;
-
-exports.GetPlacesByRegion = function(region) {
-  var places = [];
-
-  for (var place in stables) {
-    var area = stables[place].z;
-    var regexp = new RegExp(region, "i");
-    if (regexp.test(area)) {
-      places.push(place);
-    }
-  }
-  return places;
-}
-
-exports.GetRegions = function() {
- var regions = [];
-
-  for (var place in stables) {
-    var area = stables[place].z;
-
-    if (regions.indexOf(area) === -1) {
-      regions.push(area);
-    }
-  }
- 
-  return regions.sort();
-}
-
-CreateGraph = function() {
-  //--------------- stable parser -----------------
-  // How to reproduce stable_raw.js
-  // * stripped just Locs out of TR_Data.lua
-  // * pipe Stables.lua to stable_raw.js
-
+// private functions
+function createGraph(options) {
   var graph = {};
 
-  for(var loc in stables) {
+  // v--- wtf?
+  var weighted = false;
+  if (typeof(options) !== "undefined" && options.hasOwnProperty("weighting")) {
+    weighted = true;
+  }
+  var weighting = 0;
 
+  for(var loc in stables) {
     graph[loc] = {};
     var destinations = {};
 
     for (var dest in stables[loc].d) {
+      // optional weighting, favour swift travel over normal
+      // var stCost = typeof(stables[loc].d[dest].st) !== "undefined" ? 1 : 5;
+      var stCost = 0;
 
-      //i swift travel (parameter)
-      var stCost = typeof(stables[loc].d[dest].st) !== "undefined" ? 1 : 5;
+      if (weighted) {
+        // reqs
+        var reqCost = 0;
+        if (typeof(stables[loc].d[dest].r) !== "undefined") {
+          var requirements = stables[loc].d[dest].r.split(',');
+          var testReqs = [];
 
-      // level costing (parameter)
-      var level = options.level;
-      
-      // TODO: standing or reqs costs
+          if (options.hasOwnProperty("standing")) {
+            requirements.forEach(function(req) {
+              if (options.standing.indexOf(req) !== -1) {
+                testReqs.push(req);
+              }
+            });
+          }
 
-      var minLevel = 0;
-      if (typeof(stables[loc].d[dest].l) !== "undefined") {
-        minLevel = stables[loc].d[dest].l;
-        // console.log("dest %s\n\tl %d + ml %d = %d", dest, level, minLevel, (level + minLevel));        
-        // console.log("\tl < ml %s st %d string %s", (level < minLevel), stCost, minLevel.toString());
+          reqCost = (requirements.length !== testReqs.length) ? 100 : 0;
+        }
+
+        // level
+        var level = options.level;
+        var minLevel = 0;
+        if (typeof(stables[loc].d[dest].l) !== "undefined") {
+          minLevel = Math.abs(stables[loc].d[dest].l); 
+        }
+
+        var levelCost = level < minLevel ? 100 : 0; // zero otherwise we'll penalise the route unecessarily because of the previous swift travel weighting
+        weighting = 1 + stCost + levelCost + reqCost;
+      } else {
+        weighting = 1;
       }
-
-      var levelCost = level < minLevel ? 5 : 0; // zero otherwise we'll penalise the route unecessarily because of the previous swift travel weighting
-
-      var weighting = stCost + levelCost;
-
       destinations[dest] = weighting;
     }
     graph[loc] = destinations;
@@ -101,13 +87,7 @@ CreateGraph = function() {
   return graph;
 }
 
-
-//FIXME: does this graph need to public?
-var graph = CreateGraph(); 
-
-exports.FATB = graph;
-
-exports.GetPathCostObject = function(path) {
+function GetPathCostObject(path) {
   var start = path[0];
   var next = start;
   var costObject = {};
@@ -119,18 +99,98 @@ exports.GetPathCostObject = function(path) {
 
     var via = stables[next].d[dest];
     costObject[dest] = via;
- 
+
     next = dest;
   }
 
   return costObject;
 }
 
-exports.FindPath = function(start, finish) {
-  return find_path(graph, start,finish);
+///////////////////////////////////////////////////////////////////
+// Constructor
+///////////////////////////////////////////////////////////////////
+function FATB(options) {
+  this.options = options;
+  this.graph = createGraph(options);
+  this.stables = stables;
+  this.reqs = reqs;
 }
 
-exports.GetPlace = function(place) {
+FATB.version = "2.1.3";
+// properties
+FATB.prototype.GetPlacesByRegion = function(region) {
+  var places = [];
+
+  for (var place in stables) {
+    var area = stables[place].z;
+    var regexp = new RegExp(region, "i");
+    if (regexp.test(area)) {
+      places.push(place);
+    }
+  }
+  return places;
+};
+
+FATB.prototype.GetRegions = function() {
+ var regions = [];
+
+  for (var place in stables) {
+    var area = stables[place].z;
+
+    if (regions.indexOf(area) === -1) {
+      regions.push(area);
+    }
+  }
+ 
+  return regions.sort();
+};
+
+FATB.prototype.FindPath = function(start, finish) {
+  var graph = this.graph;
+  var route = [];
+  
+  try {
+    route=find_path(graph, start,finish);
+    // console.log("find_path: %j", route);
+  } catch(e) {
+    console.log("whoops: %j", e);
+    route = [];
+  }
+
+  var current=0;
+  var next=current+1;
+
+  var weightCost = 0;
+  for(var i=0, size=route.length; i<size; i++) {
+    var currentPlace = route[i];
+    var nextPlace = route[next];
+    placeCost = graph[currentPlace][nextPlace];
+    weightCost += typeof(placeCost) === "undefined" ? 0: placeCost;
+
+    if (start === "Galtrev") {
+      // console.log("%d 1 current: (%s) next: %d (%s)", i, currentPlace, next, nextPlace);
+      // console.log("%d 2 from %s cost for places %j", i, currentPlace, graph[currentPlace]);
+      // console.log("\n------\n%s => %s\n\t%j\n--------\n", currentPlace, nextPlace, this.stables[currentPlace].d);
+    }
+    // console.log("%d 3 cost: %d", i, placeCost);
+
+    next++;
+  }
+
+  // console.log("total: %s => %s %d", start, finish, weightCost);
+
+
+  if (weightCost > 100) {
+    // var msg = ["No path found from ", start, " to ", finish, " because you have not met the minimum requirements."].join(''); 
+    // throw new Error(msg);
+    route = [];
+  }
+
+  return route;
+};
+
+FATB.prototype.GetPlace = function(place) {
+  var graph = this.graph;
   var regex = new RegExp("^"+place,"i");
 
   var found = [];
@@ -141,12 +201,16 @@ exports.GetPlace = function(place) {
   });
 
   return found;
-}
+};
 
-exports.GetTotalCost = function(route) {
+FATB.prototype.GetPathCostObject = GetPathCostObject;
+
+FATB.prototype.GetTotalCost = function(path) {
+  var route = GetPathCostObject(path);
   var cost = 0;
 
   for (var place in route ) {
+    // console.log("%s %j", place, route[place]);
     var hasCost = route[place].hasOwnProperty("c");
     var hasSTCost = route[place].hasOwnProperty("s");
 
@@ -155,12 +219,14 @@ exports.GetTotalCost = function(route) {
   }
 
   return cost;
-}
+};
 
-exports.GetTotalTime = function(route) {
+FATB.prototype.GetTotalTime = function(path) {
+  var route = GetPathCostObject(path); //should we still do this?
   var time = 0;
 
   for (var place in route ) {
+    // console.log("%s %j", place, route[place]);
     var hasTime = route[place].hasOwnProperty("t");
     var hasSTTime = route[place].hasOwnProperty("st");
 
@@ -169,27 +235,26 @@ exports.GetTotalTime = function(route) {
   }
 
   return time;
-}
+};
 
-exports.GetMetaData = function(place) {
-  var metadata = {};
-  for (var prop in stables[place]) {
-    // // exclude destination and area data
-    if (prop !== "d" && prop !== "z" && prop !== "a") {
-      var key = "";
-      if (prop === "l") key = "gps coords";
-      if (prop === "ml") key = "min level";
-      if (prop === "t") key = "time";
-      if (prop === "td") key = "reqs";
-      if (key === "") key = prop;
+FATB.prototype.GetRequirements = function(term) {
+  if (typeof(term) === "undefined") {
+    return this.reqs;
+  }
 
-      metadata[key] = stables[place][prop];
+  var found = {};
+
+  for (var code in this.reqs) {
+    var termRegex = new RegExp(term, "i");
+    if (termRegex.test(this.reqs[code])) {
+      found[code] = this.reqs[code];
     }
   }
-  return metadata;
-}
+  return found;
+};
+module.exports = FATB;
 
-},{"./stable_raw.js":2,"dijkstrajs":3}],2:[function(_dereq_,module,exports){
+},{"./stable_raw":2,"dijkstrajs":3}],2:[function(_dereq_,module,exports){
 module.exports.stables = {
                   "Adso's Camp": {
                                       "d": {

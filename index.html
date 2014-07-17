@@ -6,12 +6,12 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script src="js/fromatobree-browser.js"></script>
     <meta name="viewport" content="width=device-width,initial-scale=0.6, maximum-scale=0.6">
-    <!-- <script src="dev/node-live-reload.js"></script> -->
+    <script src="dev/node-live-reload.js"></script>
   </head>
   <body>
     <div id="center">
       <h1>From A to Bree</h1>
-      <table border="0" cellpadding="5"> <!-- i'll prolly burn in hell for using deprecated table attributes. lol --!>
+      <table border="1" cellpadding="5"> <!--i'll prolly burn in hell for using deprecated table attributes. lol-->
         <tr><td colspan="2">I want to go...</td></tr>
       <tr>
         <td>From</td>
@@ -30,35 +30,51 @@
         <td colspan="2"><button id="FindRoute" class="topcoat-button">Show me the way</button></td>
       </tr>
 
-      <tr><td colspan="2">Configuration (doesn't work yet)</td></tr>
+      <tr><td colspan="2">Configuration</td></tr>
       <tr>
-          <td colspan="2">
-            <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
-            <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input">
-          </td>
-        </tr>
-
-        <tr>
-          <td colspan="2"><div id="results">choose your starting and ending locations!</div></td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <strong>Legend</strong><br />
-            hover over icons on destination for details:<br/>
-            <span class="icon-key"></span>&nbsp;Requires quest or reputation<br/>
-            <span class="icon-forward"></span>&nbsp;Swift travel<br />
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <h3>credits</h3>
-            Vinny (<a href="http://www.lotrointerface.com/downloads/info524-Travellocationsreference.html">TravelRef</a> Plugin author) who kindly gave me permission to use his stable data. The valuable data has helped speed up the development of this app.</td></tr>
+        <td colspan="2">
+          <label class="topcoat-checkbox" for="weighting">
+            <input type="checkbox" id="weighting">
+            <div class="topcoat-checkbox__checkmark"></div>
+          Using these settings (will restrict number of available routes to you)
+        </label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <div id="reqs"></div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <input type="range" min="1" max="95" step="1" value="70" id="level" class="topcoat-range">
+          <input type="text" size="3" value="70" id="levelMeter" class="topcoat-text-input">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2"><div id="results">choose your starting and ending locations!</div></td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <strong>Legend</strong><br />
+          hover over icons on destination for details:<br/>
+          <span class="icon-key"></span>&nbsp;Requires quest or reputation<br/>
+          <span class="icon-forward"></span>&nbsp;Swift travel<br />
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <h3>credits</h3>
+          Vinny (<a href="http://www.lotrointerface.com/downloads/info524-Travellocationsreference.html">TravelRef</a> Plugin author) who kindly gave me permission to use his stable data. The valuable data has helped speed up the development of this app.
+        </td>
+      </tr>
 
       </table>
     </div>
 
     <script>
       // initialisation
+      var fatb = new FATB();
       var regions = fatb.GetRegions();
       var selStartRegion = document.getElementById("startRegion");
       var selFinishRegion = document.getElementById("finishRegion");
@@ -87,6 +103,39 @@
         selFinishPlace.options[selFinishPlace.options.length] = new Option(places[i], places[i]);
       }
 
+      // populate standing
+      var reqs = fatb.GetRequirements();
+      var elReqs = document.getElementById("reqs");
+
+      var i = 0;
+      for(var code in reqs) {
+
+        var label = document.createElement("label");
+        label.htmlFor = code;
+        label.className = "foo topcoat-checkbox";
+        label.appendChild(document.createTextNode(reqs[code]));
+
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = code;
+        checkbox.value = code;
+
+        var topcoat = document.createElement("div");
+        topcoat.className = "topcoat-checkbox__checkmark";
+        
+        label.appendChild(checkbox);
+        label.appendChild(topcoat);
+        elReqs.appendChild(label);
+
+
+        i++;
+        // console.log(i)
+        if (i>=3) {
+          // console.log("%d break", i);
+          elReqs.appendChild(document.createElement("br"));
+          i=0;
+        }
+      };
       
       var start = places[0];
       var finish = places[0];
@@ -126,9 +175,37 @@
       selFinishRegion.addEventListener("change", onChangeRegion); 
       var button = document.getElementById("FindRoute");
       button.addEventListener("click", function(evt) {
+        var useWeighting=document.getElementById("weighting").checked;
+        var options = {};
+
+        if (useWeighting) {
+          standingList = [];
+           
+          var elReqsChildren = document.getElementById("reqs").children;
+          for (var i=0; i < elReqsChildren.length; i++) {
+            var labelKids = elReqsChildren[i].children;
+            for (var j=0; j < labelKids.length; j++) {
+              if (labelKids[j].type === "checkbox" && labelKids[j].checked) {
+                // console.log(i, j, labelKids[j].id);
+                standingList.push(labelKids[j].id);
+              }
+            }
+          }
+          
+          options = { 
+                      weighting : true
+                      , level : parseInt(document.getElementById("levelMeter").value)
+                      , standing : standingList
+                    };
+
+          // console.dir(options);
+        }
+        fatb = new FATB(options); // meh maybe we need the other functions before here to be class level vs instance
         route = fatb.FindPath(start,finish);
         routeCost = fatb.GetPathCostObject(route);
+        // console.dir(routeCost);
         var message = "";
+        
         for(var i=0, max=route.length; i<max; i++) {
           if (i===0) { 
             message += '<span class="icon-map-marker"></span>&nbsp;Starting from: ';
@@ -144,10 +221,9 @@
 
               var viaProps =  routeCost[route[i]];
 
-
               var info = "";
 
-              if (Object.keys(viaProps).length > 0) {
+              if (Object.keys(viaProps).length > 0) { //FIXME: causes () for routes with no restrictions, but incurrs costs
                 info = " ("; 
                 if (viaProps.hasOwnProperty("st")) {
                   info += '<acronym title="swift travel"><span class="icon-forward"></span></acronym>&nbsp;&nbsp;';
@@ -168,43 +244,39 @@
                 info += ")";
               }
               message += route[i] + info  + "<br /><br />";
-              // message += route[i] + "<br /><br />";
         }
 
 
-        message += "It'll take you ";
-        var travelTime = fatb.GetTotalTime(routeCost);
-        var travelTimeMins = 0;
-        if (travelTime > 60) {
-          travelTimeMins = (travelTime / 60).toFixed(0);
-          travelTime = travelTime % 60;
-          message += travelTimeMins + " minutes and " + travelTime + " seconds.<br />";
+        if (route.length === 0) {
+          message += "No viable route found!";
         } else {
-          message += travelTime + " seconds.</br >";
-        }
-
-
-        // message += JSON.stringify(routeCost, null, 8);
-        // document.getElementById("results").value = message;
+          message += "It'll take you ";
+          var travelTime = fatb.GetTotalTime(routeCost);
+          var travelTimeMins = 0;
+          if (travelTime > 60) {
+            travelTimeMins = (travelTime / 60).toFixed(0);
+            travelTime = travelTime % 60;
+            message += travelTimeMins + " minutes and " + travelTime + " seconds.<br />";
+          } else {
+            message += travelTime + " seconds.</br >";
+          }
+      }
 
         document.getElementById("results").innerHTML = message;
       });
 
       var selStartPlace = document.getElementById("startPlace");
       selStartPlace.addEventListener("change", function(evt) {
-        // console.log("you selected your start as %s", evt.srcElement.value);
         console.log("you selected your start as %s", evt.target.value);
-        // start = evt.srcElement.value;
         start = evt.target.value;
 
       });
       var selFinishPlace = document.getElementById("finishPlace");
       selFinishPlace.addEventListener("change", function(evt) {
-        // finish = evt.srcElement.value;
         finish = evt.target.value;
       });
 
-      console.log("%s is loaded.", fatb.VERSION)
+      console.log("%s is loaded.", FATB.version)
     </script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
