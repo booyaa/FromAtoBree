@@ -2,10 +2,10 @@
 
 A route planner for Lord of the Rings Online.
 
+[![Build Status](https://travis-ci.org/booyaa/FromAtoBree.svg?branch=master)](https://travis-ci.org/booyaa/FromAtoBree)[![Dependency Status](https://david-dm.org/alanshaw/david.svg?theme=shields.io)](https://david-dm.org/booyaa/fromatobree)
+
 [![browser support](https://ci.testling.com/booyaa/FromAtoBree.png)
 ](https://ci.testling.com/booyaa/FromAtoBree)
-
-[![Build Status](https://travis-ci.org/booyaa/FromAtoBree.svg?branch=master)](https://travis-ci.org/booyaa/FromAtoBree)
 
 If you need an in-game plugin might I suggest Vinny's excellent [TravelRef](http://www.lotrointerface.com/downloads/info524-Travellocationsreference.html). 
 
