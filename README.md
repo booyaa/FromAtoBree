@@ -1,13 +1,16 @@
-#FromAtoBree
+# FromAtoBree
+
+## Current State: broken
+
+2018-05-01 - I've created the new version of the Travel Reference data and converted to JSON. The library no longer parses the data or expose the public functions. I don't have time to fix the code (I suspect node doesn't use the same version of Javascript it used to 4 years ago). Raise an issue if you want to be the maintainer of this repo and I'll make you a contributor.
 
 A route planner for Lord of the Rings Online.
 
 [![Build Status](https://travis-ci.org/booyaa/FromAtoBree.svg?branch=master)](https://travis-ci.org/booyaa/FromAtoBree)[![Dependency Status](https://david-dm.org/alanshaw/david.svg?theme=shields.io)](https://david-dm.org/booyaa/fromatobree)
 
-[![browser support](https://ci.testling.com/booyaa/FromAtoBree.png)
-](https://ci.testling.com/booyaa/FromAtoBree)
+[![browser support](https://ci.testling.com/booyaa/FromAtoBree.png)](https://ci.testling.com/booyaa/FromAtoBree)
 
-If you need an in-game plugin might I suggest Vinny's excellent [TravelRef](http://www.lotrointerface.com/downloads/info524-Travellocationsreference.html). 
+If you need an in-game plugin might I suggest Vinny's excellent [TravelRef](http://www.lotrointerface.com/downloads/info524-Travellocationsreference.html).
 
 ## Version 2.1.3 has landed
 
@@ -25,8 +28,9 @@ Travel time and route cost look broken on the webpage, so please don't use it fo
 
 ```npm install -g fromatobree```
 
-```
-bin/index.js # i think the installer might actually call the bin/fatb, i have no fucking idea! lol
+```shell
+
+bin/index.js # i think the installer might actually call the bin/fatb, i have no idea! lol
 From A to Bree v2.1.3
 
 usage:
@@ -55,13 +59,26 @@ standing  - any faction reputation or quests you may have completed. use
 
 ```
 
+## Contributions
+
+### How to generate stable data
+
+You'll need Lua 5.3 or better to extract the data from the LoTRO plugin.
+
+- Download the latest version of Vinny's [Travel reference](http://www.lotrointerface.com/downloads/info524-Travellocationsreference.html).
+- change to `utils` directory of the repo.
+- Extract `TR_Data.lua` and save to `utils` directory of this repo.
+- Save `Locs` and `Reqs` tables in `TR_Data.lua` to `Stables.lua`
+- Run the script using the following: `lua Stables.lua > ../lib/stable_raw.js`
+
 ### Installation / further development
 
-* Probably a good idea to fork/clone/thing the rep.
-* Install the development deps
-* It's quite REPL friendly
+- Probably a good idea to fork/clone/thing the rep.
+- Install the development deps
+- It's quite REPL friendly
 
-```
+```shell
+
 $>node
 > var FATB = require('fromatobree');
 undefined
@@ -71,7 +88,7 @@ undefined
 [ 'Hobbiton',
   'West Bree',
   'Suri-kyla' ]
->
+
 ```
 
 ## Bugs, feature requests or suggestions
@@ -85,4 +102,4 @@ Vinny (TravelRef Plugin author) who kindly gave me permission to use his stable 
 qiao for his web client build script in his awesome [PathFinding.js](https://github.com/qiao/PathFinding.js) lib.
 
 GO EAGLES!
-.
+
